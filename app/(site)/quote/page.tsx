@@ -6,6 +6,9 @@ import { useQuoteStore } from '@/store/useQuoteStore';
 import { calculateQuote } from '@/lib/pricing/calculate';
 import { useEffect, useState } from 'react';
 import { AnimatedNumber } from '@/components/animated-number';
+import { Stepper } from '@/components/stepper';
+import { QuoteSummary } from '@/components/quote-summary';
+import { type QuoteSelections } from '@/lib/pricing/calculate';
 
 const serviceOptions = [
   { value: 'wiring', label: 'Wiring' },
@@ -59,57 +62,61 @@ export default function QuotePage() {
 
   return (
     <div className="space-y-6">
+      <Stepper current={1} steps={[{ label: 'Choose service' }, { label: 'Your details' }, { label: 'Review & pay' }]} />
       <h1 className="text-2xl font-semibold">Instant Quote</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <label className="block">
             <span className="text-sm text-gray-700">Service</span>
-            <select className="mt-1 w-full rounded border px-3 py-2" {...register('selections.serviceType')}>
+            <select className="mt-1 w-full rounded-md border bg-white px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-900" {...register('selections.serviceType')}>
               {serviceOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </label>
           <label className="block">
             <span className="text-sm text-gray-700">Urgency</span>
-            <select className="mt-1 w-full rounded border px-3 py-2" {...register('selections.urgency')}>
+            <select className="mt-1 w-full rounded-md border bg-white px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-900" {...register('selections.urgency')}>
               {urgencyOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </label>
           <label className="block">
             <span className="text-sm text-gray-700">Distance (km)</span>
-            <input type="number" step="1" min={0} className="mt-1 w-full rounded border px-3 py-2" {...register('selections.distanceKm', { valueAsNumber: true })} />
+            <input type="number" step="1" min={0} className="mt-1 w-full rounded-md border bg-white px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-900" {...register('selections.distanceKm', { valueAsNumber: true })} />
           </label>
-        </div>
+          </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <label className="block">
             <span className="text-sm text-gray-700">Name</span>
-            <input className="mt-1 w-full rounded border px-3 py-2" {...register('name')} />
+            <input className="mt-1 w-full rounded-md border bg-white px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-900" {...register('name')} />
             {errors.name && <span className="text-xs text-red-600">{errors.name.message}</span>}
           </label>
           <label className="block">
             <span className="text-sm text-gray-700">Email</span>
-            <input className="mt-1 w-full rounded border px-3 py-2" {...register('email')} />
+            <input className="mt-1 w-full rounded-md border bg-white px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-900" {...register('email')} />
             {errors.email && <span className="text-xs text-red-600">{errors.email.message}</span>}
           </label>
           <label className="block">
             <span className="text-sm text-gray-700">Phone</span>
-            <input className="mt-1 w-full rounded border px-3 py-2" {...register('phone')} />
+            <input className="mt-1 w-full rounded-md border bg-white px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-900" {...register('phone')} />
             {errors.phone && <span className="text-xs text-red-600">{errors.phone.message}</span>}
           </label>
-        </div>
-
-        <div className="flex items-center justify-between card p-4">
-          <div>
-            <div className="text-sm muted">Estimated total</div>
-            <AnimatedNumber className="text-2xl font-semibold" value={total} prefix="$" />
           </div>
-          <button type="submit" disabled={submitting} className="rounded bg-primary px-4 py-2 text-white hover:opacity-90 disabled:opacity-60">
-            {submitting ? 'Submitting...' : 'Get My Quote'}
-          </button>
-        </div>
 
-        {serverMsg && <div className="text-sm text-gray-700">{serverMsg}</div>}
-      </form>
+          <div className="flex items-center justify-between card p-4">
+            <div>
+              <div className="text-sm muted">Estimated total</div>
+              <AnimatedNumber className="text-2xl font-semibold" value={total} prefix="$" />
+            </div>
+            <button type="submit" disabled={submitting} className="rounded bg-primary px-4 py-2 text-white hover:opacity-90 disabled:opacity-60">
+              {submitting ? 'Submitting...' : 'Get My Quote'}
+            </button>
+          </div>
+
+          {serverMsg && <div className="text-sm text-gray-700">{serverMsg}</div>}
+        </form>
+        <QuoteSummary selections={selections as QuoteSelections} rules={rules} />
+      </div>
     </div>
   );
 }
