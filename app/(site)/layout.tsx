@@ -1,4 +1,4 @@
-import './globals.css';
+import '../globals.css';
 import React from 'react';
 import { getTenantFromHeaders } from '@/lib/tenants/get-tenant';
 
