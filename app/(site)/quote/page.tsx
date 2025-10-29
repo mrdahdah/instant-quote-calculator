@@ -5,6 +5,7 @@ import { QuoteInputSchema, type QuoteInput } from '@/lib/validation';
 import { useQuoteStore } from '@/store/useQuoteStore';
 import { calculateQuote } from '@/lib/pricing/calculate';
 import { useEffect, useState } from 'react';
+import { AnimatedNumber } from '@/components/animated-number';
 
 const serviceOptions = [
   { value: 'wiring', label: 'Wiring' },
@@ -97,10 +98,10 @@ export default function QuotePage() {
           </label>
         </div>
 
-        <div className="flex items-center justify-between rounded border bg-white p-4">
+        <div className="flex items-center justify-between card p-4">
           <div>
-            <div className="text-sm text-gray-500">Estimated total</div>
-            <div className="text-2xl font-semibold">${total}</div>
+            <div className="text-sm muted">Estimated total</div>
+            <AnimatedNumber className="text-2xl font-semibold" value={total} prefix="$" />
           </div>
           <button type="submit" disabled={submitting} className="rounded bg-primary px-4 py-2 text-white hover:opacity-90 disabled:opacity-60">
             {submitting ? 'Submitting...' : 'Get My Quote'}

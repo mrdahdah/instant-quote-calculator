@@ -14,3 +14,16 @@ html, body {
 body {
   @apply bg-gray-50 text-gray-900;
 }
+
+.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+/* surface utilities that respect dark mode */
+.card {
+  @apply rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/60;
+}
+
+.muted {
+  @apply text-gray-600 dark:text-gray-300;
+}
